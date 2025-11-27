@@ -1,0 +1,53 @@
+# --- C++ 编译产物 ---
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.lib
+*.a
+
+# --- CMake 构建系统 ---
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+Makefile
+# 忽略整个构建目录 (通常我们在 build 文件夹里编译)
+build/
+build-*/
+bin/
+lib/
+
+# --- Qt 自动生成的文件 ---
+# MOC (Meta-Object Compiler)
+moc_*.cpp
+# UI (User Interface Compiler)
+ui_*.h
+# Resource system
+qrc_*.cpp
+# Qt Creator 产生的用户配置文件
+*.pro.user
+*.pro.user.*
+*.qmake.stash
+
+# --- IDE 和 编辑器 ---
+# VS Code
+.vscode/
+# Visual Studio
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+# JetBrains (CLion)
+.idea/
+
+# --- 操作系统 ---
+.DS_Store
+Thumbs.db
+
+# --- 临时文件 ---
+*.log
+*.tmp
