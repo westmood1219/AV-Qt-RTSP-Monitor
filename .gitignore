@@ -21,6 +21,11 @@ bin/
 lib/
 
 # --- Qt 自动生成的文件 ---
+# Qt User file
+*.user
+.qtcreator/
+build/
+
 # MOC (Meta-Object Compiler)
 moc_*.cpp
 # UI (User Interface Compiler)
