@@ -22,6 +22,7 @@ public:
 
 private slots:
     void on_btnOpen_clicked();
+    void onFrameDecoded(QImage image);
 private:
     Ui::MainWindow *ui;
     DecodeThread *m_decodeThread;

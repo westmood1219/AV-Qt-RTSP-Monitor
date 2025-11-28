@@ -17,24 +17,37 @@
    <widget class="QTextEdit" name="objName">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>110</y>
-      <width>421</width>
-      <height>321</height>
+      <x>0</x>
+      <y>0</y>
+      <width>791</width>
+      <height>571</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="btnOpen">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>130</y>
+      <x>10</x>
+      <y>10</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>btnOpen</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>771</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
     </property>
    </widget>
   </widget>
@@ -44,9 +57,15 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menumonitor">
+    <property name="title">
+     <string>monitor</string>
+    </property>
+   </widget>
+   <addaction name="menumonitor"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

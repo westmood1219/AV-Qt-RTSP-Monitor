@@ -21,6 +21,9 @@ public:
     void Close();
     int getWidth() const;
     int getHeight() const;
+    // 声明获取 FormatContext 的接口
+    AVFormatContext* getFormatContext();
+
 private:
     AVFormatContext* fmt_ctx = nullptr;
     int video_stream_index = -1;

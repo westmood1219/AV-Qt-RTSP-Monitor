@@ -72,3 +72,8 @@ void VideoDemuxer::Close() {
 
 int VideoDemuxer::getWidth() const { return width; }
 int VideoDemuxer::getHeight() const { return height; }
+
+AVFormatContext *VideoDemuxer::getFormatContext()
+{
+    return fmt_ctx;
+}

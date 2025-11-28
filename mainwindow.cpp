@@ -36,6 +36,8 @@ tips:槽函数名字叫 on_btnOpen_clicked,在 Qt 中，这是一个非常特殊
     //multiThread
     m_decodeThread = new DecodeThread();
 
+    connect(m_decodeThread,&DecodeThread::sig_frameDecoded,this,&MainWindow::onFrameDecoded);
+
 }
 
 MainWindow::~MainWindow()
@@ -71,4 +73,9 @@ void MainWindow::on_btnOpen_clicked() {
     QString fileName = QFileDialog::getOpenFileName(this, "Select Video");
 
     m_decodeThread->open(fileName.toStdString());
+}
+
+void MainWindow::onFrameDecoded(QImage image){
+    //把图片显示在Label上
+    ui->label->setPixmap(QPixmap::fromImage(image).scaled(ui->label->size(),Qt::KeepAspectRatio));
 }
