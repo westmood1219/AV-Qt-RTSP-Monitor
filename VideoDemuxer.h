@@ -13,7 +13,7 @@ public:
     ~VideoDemuxer();
 
     //打开文件 ,成功返回true
-    bool Open(const char* url);
+    bool Open(const char* url, AVDictionary** options);
     //读取一帧数据
     //返回0true
     //参数:pkt是由调用者分配好并传进来的空包

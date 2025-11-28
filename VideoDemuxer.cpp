@@ -9,12 +9,12 @@ VideoDemuxer::~VideoDemuxer() {
     Close();
 }
 
-bool VideoDemuxer::Open(const char* url) {
+bool VideoDemuxer::Open(const char* url, AVDictionary** options) {
     Close(); // 防止重复打开，先清理
 
     // 1. Open Context
     // options 传 NULL，使用默认参数
-    int ret = avformat_open_input(&fmt_ctx, url, nullptr, nullptr);
+    int ret = avformat_open_input(&fmt_ctx, url, nullptr, options);
     if (ret < 0) {
         char errbuf[1024];
         av_strerror(ret, errbuf, sizeof(errbuf));

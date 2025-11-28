@@ -33,6 +33,13 @@ tips:槽函数名字叫 on_btnOpen_clicked,在 Qt 中，这是一个非常特殊
 
     qDebug()<<"FFmpeg Version: "<<av_version_info();
 
+    if(ui->rtspAddr){
+        // 信号：必须写 (&QLineEdit::returnPressed)
+        //connect(ui->rtspAddr, static_cast<void (QLineEdit::*)()>(&QLineEdit::returnPressed), this, &MainWindow::on_rtspAddr_returnPressed);
+        connect(ui->rtspAddr, SIGNAL(returnPressed()),
+                this, SLOT(on_rtspAddr_returnPressed()));
+    }
+
     //multiThread
     m_decodeThread = new DecodeThread();
 
@@ -48,32 +55,31 @@ MainWindow::~MainWindow()
 // 假设 demuxer 是 MainWindow 的成员变量： VideoDemuxer m_demuxer;
 
 void MainWindow::on_btnOpen_clicked() {
-    //single thread
-    // QString fileName = QFileDialog::getOpenFileName(this, "Select Video");
-    // if (fileName.isEmpty()) return;
-
-    // if (m_demuxer.Open(fileName.toStdString().c_str())) {
-    //     ui->objName->append("Open Success!");
-    //     ui->objName->append("Resolution: " + QString::number(m_demuxer.getWidth()) + "x" + QString::number(m_demuxer.getHeight()));
-
-    //     // 读取 10 帧测试一下
-    //     AVPacket* pkt = av_packet_alloc(); // 1. 分配壳
-    //     for(int i=0; i<10; i++) {
-    //         if (m_demuxer.Read(pkt) == 0) {
-    //             ui->objName->append(QString("Read Packet size=%1 pts=%2").arg(pkt->size).arg(pkt->pts));
-    //             av_packet_unref(pkt); // 2. 释放内存 (记得！)
-    //         } else {
-    //             break;
-    //         }
-    //     }
-    //     av_packet_free(&pkt); // 3. 释放壳
-    // }
-
     //multi thread
     QString fileName = QFileDialog::getOpenFileName(this, "Select Video");
 
     m_decodeThread->open(fileName.toStdString());
 }
+
+void MainWindow::on_rtspAddr_returnPressed() {
+    // 获取输入框中的文本
+    QString url = ui->rtspAddr->text().trimmed(); // .trimmed() 移除前后空格
+
+    if (url.isEmpty()) {
+        QMessageBox::warning(this, "错误", "RTSP 地址不能为空！");
+        return;
+    }
+
+    // 简单的 RTSP 格式检查
+    if (!url.startsWith("rtsp://", Qt::CaseInsensitive)) {
+        QMessageBox::warning(this, "错误", "请输入有效的 RTSP 地址（例如 rtsp://...）");
+        return;
+    }
+
+    // 使用 RTSP URL 启动解码
+    m_decodeThread->open(url.toStdString());
+}
+
 
 void MainWindow::onFrameDecoded(QImage image){
     //把图片显示在Label上

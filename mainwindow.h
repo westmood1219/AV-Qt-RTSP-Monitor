@@ -22,6 +22,7 @@ public:
 
 private slots:
     void on_btnOpen_clicked();
+    void on_rtspAddr_returnPressed();
     void onFrameDecoded(QImage image);
 private:
     Ui::MainWindow *ui;
