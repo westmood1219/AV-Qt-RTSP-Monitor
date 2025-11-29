@@ -13,7 +13,7 @@ bool VideoDemuxer::Open(const char* url, AVDictionary** options) {
     Close(); // 防止重复打开，先清理
 
     // 1. Open Context
-    // options 传 NULL，使用默认参数
+    // options 传 NULL，使用默认参数// 这里的 options 是二级指针，FFmpeg 会读取并修改它（移除已识别的项）
     int ret = avformat_open_input(&fmt_ctx, url, nullptr, options);
     if (ret < 0) {
         char errbuf[1024];
@@ -27,6 +27,8 @@ bool VideoDemuxer::Open(const char* url, AVDictionary** options) {
         std::cerr << "Find Stream Info Error" << std::endl;
         return false;
     }
+    // 这里打印一下日志，看看是不是很快就打开了
+    std::cout << "Stream Opened. Probesize used." << std::endl;
 
     // 3. Find Video Stream
     video_stream_index = av_find_best_stream(fmt_ctx, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
