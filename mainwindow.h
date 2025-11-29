@@ -21,12 +21,10 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_btnOpen_clicked();
-    void on_rtspAddr_returnPressed();
-    void onFrameDecoded(QImage image);
+    // void on_btnOpen_clicked();
+    // void on_rtspAddr_returnPressed();
+    // void onFrameDecoded(QImage image);
 private:
     Ui::MainWindow *ui;
-    DecodeThread *m_decodeThread;
-    VideoDemuxer m_demuxer;
 };
 #endif // MAINWINDOW_H

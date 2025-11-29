@@ -36,12 +36,12 @@ void DecodeThread::run()
 
     // [缓冲区层] 核心！让 FFmpeg 只要收到数据包就立刻吐出来，不要存
     //所以不要buffer
-    // av_dict_set(&options, "buffer_size", "1024000", 0); // 增大接收缓冲防丢包
+    av_dict_set(&options, "buffer_size", "32768", 0); // 接收缓冲防丢包
     av_dict_set(&options, "max_delay", "100000", 0);    // 最大延迟 0.1秒
 
     // [探测层] 极速打开，不分析太久
-    // av_dict_set(&options, "probesize", "102400", 0);    // 减少探测数据量
-    // av_dict_set(&options, "analyzeduration", "100000", 0); // 减少分析时长
+    av_dict_set(&options, "probesize", "32", 0);    // 减少探测数据量
+    av_dict_set(&options, "analyzeduration", "100000", 0); // 减少分析时长
     //有了后面的 Lazy Init，这里用默认的也可以，不用刻意改太小
 
     // [标志位] 无缓冲
