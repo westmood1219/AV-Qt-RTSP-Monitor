@@ -30,6 +30,9 @@ protected:
     void resizeEvent(QResizeEvent *event);
     void onm_btnFullScreenClicked();
 
+    void contextMenuEvent(QContextMenuEvent *event) override;
+    void snapshot();
+
 private slots:
     // 接收线程发来的图片并更新UI
     void updateFrame(QImage image);
@@ -39,17 +42,11 @@ private:
     bool isMax;
 
     DecodeThread* m_decodeThread = nullptr;//管理解码 线程
-    // QImage m_currentImage;// 保持当前最新一帧
     QLabel *m_videoLabel = nullptr;//用于显示画面的Label
     QPushButton *m_btnFullScreen = nullptr;//全屏按钮
 
+    QImage m_currentImage;//保存当前帧
 
-    //保存原始布局信息
-    QWidget *m_originalParent = nullptr; // 记录原来的父窗口
-    int m_originalRow = 0;               // 记录在网格布局中的行号
-    int m_originalCol = 0;               // 记录在网格布局中的列号
-    int m_originalRowSpan = 1;           // (可选) 记录跨行数
-    int m_originalColSpan = 1;           // (可选) 记录跨列数
 
 signals:
     void sig_doubleClick(QWidget *w);

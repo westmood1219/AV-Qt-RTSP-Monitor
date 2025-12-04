@@ -1,15 +1,21 @@
 #include "rtsp_player.h"
+#include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
 #include <QLayout>
+#include <QMenu>
+#include <QContextMenuEvent>
 
 RTSPPlayer::RTSPPlayer(QWidget *parent)
     : QWidget{parent}
 {
+
     isMax = false;
     // // 1. 初始化 UI 控件
     m_videoLabel = new QLabel(this);
     m_videoLabel->setAlignment(Qt::AlignCenter);
     m_videoLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored); // 允许缩放
+    m_videoLabel->setScaledContents(true); // 【关键优化】开启 QLabel 自动缩放
 
     // // 2. 设置布局 (让 Label 填充满整个 Widget)
     QGridLayout *layout = new QGridLayout(this);
@@ -101,8 +107,56 @@ void RTSPPlayer::mouseDoubleClickEvent(QMouseEvent *event)
 
 void RTSPPlayer::onm_btnFullScreenClicked()
 {
-    // 按钮被点也是一样的，发同一个信号
     emit sig_doubleClick(this);
+}
+
+void RTSPPlayer::contextMenuEvent(QContextMenuEvent *event)
+{
+    //创建菜单对象(栈上分配即可,用完即毁,无需new)
+    QMenu menu(this);
+
+    //创建截图动作
+    QAction *actionSnapshot = menu.addAction("📸 截图");
+
+    //创建"全屏"动作
+    QAction *actionFullScreen=menu.addAction("⛶ 全屏");
+
+    //连接信号与槽
+    connect(actionSnapshot,&QAction::triggered,this,&RTSPPlayer::snapshot);
+
+    //服用全屏逻辑
+    connect(actionFullScreen,&QAction::triggered,[this](){
+        emit sig_doubleClick(this);
+    });
+
+    //显示菜单
+    // event->globalPos() 告诉菜单应该出现在鼠标当前的位置
+    menu.exec(event->globalPos());
+
+}
+
+void RTSPPlayer::snapshot()
+{
+    if(m_currentImage.isNull()){
+        qDebug()<<"无画面,无法截图";
+        return;
+    }
+
+    //确保截图路径存在
+    QString savePath = "E:/AV/snapshots";
+    QDir dir(savePath);
+    if(!dir.exists()) dir.mkpath(".");
+
+    //文件名:路径+"/"+日期+格式
+    QString fileName = savePath+"/"+
+                       QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_zzz")+".jpg";
+
+    if(m_currentImage.save(fileName,"JPG"))
+    {
+        qDebug()<<"截图已保存:  "<<fileName;
+    }else{
+        qDebug()<<"截图保存失败";
+    }
 }
 
 
@@ -121,9 +175,16 @@ void RTSPPlayer::resizeEvent(QResizeEvent *event)
 void RTSPPlayer::updateFrame(QImage image)
 {
     if(m_videoLabel && !image.isNull()){
+
+        m_currentImage = image;
+
         //缩放图片以适应Label大小
         QPixmap pixmap = QPixmap::fromImage(image);
-        m_videoLabel->setPixmap(pixmap.scaled(m_videoLabel->size(),Qt::KeepAspectRatio));    }
+        // m_videoLabel->setPixmap(pixmap.scaled(m_videoLabel->size(),Qt::KeepAspectRatio));    }
+        //前面 setScaledContents(true) 了，Qt 底层会用 GPU 或优化算法自适应大小
+        m_videoLabel->setPixmap(pixmap);
+    }
 }
+
 
 
