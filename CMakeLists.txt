@@ -31,6 +31,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Terminal查字典.md
         tempValue.txt
         rtsp_player.h rtsp_player.cpp
+        videogridlayout.h videogridlayout.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET AV APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
