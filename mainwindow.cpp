@@ -5,6 +5,9 @@
 #include <QMessageBox>
 #include <qpushbutton.h>
 #include "ui_mainwindow.h"
+#include <QSplitter>
+#include <QStandardItem>
+#include <QListView>
 
 extern "C"{
 #include <libavcodec/avcodec.h>
@@ -19,73 +22,69 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    //解耦合后
+    // 1. 准备布局：使用 QSplitter (分割器)，这样用户可以拖动调整左右大小
+    QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
+    setCentralWidget(splitter);
 
-    //创建一个中心Widget作为布局容器
-    QWidget *centralWidget = new QWidget(this);
-    setCentralWidget(centralWidget);
+    // 2. 左边：列表 (View)
+    QListView *cameraListView = new QListView(this);
+    splitter->addWidget(cameraListView);
+    splitter->setStretchFactor(0, 1);
 
-    //1 创建2*2网格布局
-    QGridLayout *layout = new QGridLayout(centralWidget);
+    // 3. 右边：视频墙 (我们封装好的新类)
+    VideoWall *videoWall = new VideoWall(this);
+    splitter->addWidget(videoWall);
 
-    //示例RTSP流
-    QString streamUrl = "rtsp://10.163.18.72:8090/h264_pcm.sdp";
+    splitter->setStretchFactor(1, 32);
 
-    //2 实例化4个流(暂时用同一个代替)并加入网格
-    for(int i=0;i<2;++i){
-        for(int j=0;j<2;j++){
-            RTSPPlayer *player = new RTSPPlayer(centralWidget);
-            connect(player, &RTSPPlayer::sig_doubleClick, this, &MainWindow::onPlayerDoubleClicked);
-            // 存到列表里，待会要用来循环
-            players.append(player);
+    // 4. Model/View
 
-            layout->addWidget(player,i,j);
+    // A. 创建 Model (标准项模型)
+    QStandardItemModel *model = new QStandardItemModel(this);
 
-            //play
-            player->play(streamUrl.arg(i).arg(j));
-        }
+    // B. 模拟数据 (真实项目中这里应该是读取数据库或配置文件)
+    struct CameraInfo {
+        QString name;
+        QString url;
+    };
+    QList<CameraInfo> cameras = {
+        {"大门监控", "rtsp://10.163.18.72:8090/h264_ulaw.sdp"},
+        {"大厅监控", "rtsp://10.163.18.72:8090/h264_ulaw.sdp"},
+        {"走廊监控", "rtsp://10.163.18.72:8090/h264_ulaw.sdp"},
+        {"测试视频", "F:/ffmpegTraining/test.mp4"}
+    };
+
+    // C. 填充 Model
+    for (const auto& cam : cameras) {
+        QStandardItem *item = new QStandardItem(cam.name); // 显示文本
+
+        item->setData(cam.url, Qt::UserRole);
+
+        model->appendRow(item);
     }
-    //调整布局大小策略
-    centralWidget->setLayout(layout);
-}
 
-void MainWindow::onPlayerDoubleClicked(QWidget *clickedWidget)
-{
-    if (isMaximizedState) {
-        // 如果已经是全屏状态，那就——【还原】
+    // D. View 绑定 Model
+    cameraListView->setModel(model);
 
-        // 1. 把所有人都显示出来
-        for(auto player : players) {
-            player->setVisible(true);
-        }
+    // ----------------------------------------------------
+    // 5. 交互逻辑
+    // ----------------------------------------------------
 
-        // 2. 状态改回去
-        isMaximizedState = false;
+    // 当左边列表被点击 -> 告诉右边视频墙改变播放源
+    connect(cameraListView, &QListView::clicked, [=](const QModelIndex &index){
+        // 从 Model 中取出藏好的 URL
+        // index.data(Qt::UserRole) 返回的是 QVariant，需要转成 String
+        QString url = index.data(Qt::UserRole).toString();
 
-    } else {
-        // 如果是普通状态，那就——【全屏】
+        qDebug() << "更改了摄像头：" << index.data(Qt::DisplayRole).toString() << "URL:" << url;
 
-        // 1. 遍历所有播放器
-        for(auto player : players) {
-            if (player == clickedWidget) {
-                // 如果是刚才双击的那个，就显示
-                player->setVisible(true);
-            } else {
-                // 其他的统统藏起来！
-                player->setVisible(false);
-            }
-        }
+        // 调用 VideoWall 播放
+        videoWall->playUrl(url);
+    });
 
-        // 2. 状态改为全屏
-        isMaximizedState = true;
-    }
 }
 
 MainWindow::~MainWindow()
 {
-    for(auto player:players){
-        player->stop();
-    }
-
     delete ui;
 }

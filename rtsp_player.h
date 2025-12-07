@@ -23,7 +23,6 @@ public:
     void stop();
 
 protected:
-    //[重写这三个事件
     void enterEvent(QEnterEvent *event) override;
     void leaveEvent(QEvent *event) override;
     void mouseDoubleClickEvent(QMouseEvent *event) override;
@@ -33,7 +32,8 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
     void snapshot();
 
-private slots:
+    void mousePressEvent(QMouseEvent *event);
+  private slots:
     // 接收线程发来的图片并更新UI
     void updateFrame(QImage image);
 
@@ -49,7 +49,8 @@ private:
 
 
 signals:
-    void sig_doubleClick(QWidget *w);
+    void sig_doubleClick(RTSPPlayer *player);
+    void sig_clicked(RTSPPlayer* self);
 };
 
 #endif // RTSP_PLAYER_H

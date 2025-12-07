@@ -186,5 +186,9 @@ void RTSPPlayer::updateFrame(QImage image)
     }
 }
 
+void RTSPPlayer::mousePressEvent(QMouseEvent *event){
+    emit sig_clicked(this);
+    QWidget::mousePressEvent(event);
+}
 
 

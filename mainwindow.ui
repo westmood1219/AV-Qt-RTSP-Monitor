@@ -13,71 +13,36 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QTextEdit" name="objName">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>170</y>
-      <width>401</width>
-      <height>311</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnOpen">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>btnOpen</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>70</y>
-      <width>241</width>
-      <height>291</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="rtspAddr">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>10</y>
-      <width>113</width>
-      <height>23</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
+  <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>726</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menumonitor">
     <property name="title">
-     <string>monitor</string>
+     <string>file</string>
+    </property>
+    <addaction name="actionmenu"/>
+   </widget>
+   <widget class="QMenu" name="menuedit">
+    <property name="title">
+     <string>edit</string>
     </property>
    </widget>
    <addaction name="menumonitor"/>
+   <addaction name="menuedit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionmenu">
+   <property name="text">
+    <string>snapshot</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

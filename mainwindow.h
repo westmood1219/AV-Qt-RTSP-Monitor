@@ -5,6 +5,7 @@
 #include "VideoDemuxer.h"
 #include "DecodeThread.h"
 #include "rtsp_player.h"
+#include "videowall.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -20,16 +21,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+protected:
 private slots:
-    // void on_btnOpen_clicked();
-    // void on_rtspAddr_returnPressed();
-    // void onFrameDecoded(QImage image);
-    void onPlayerDoubleClicked(QWidget *w);
+
 private:
     Ui::MainWindow *ui;
 
-    bool isMaximizedState = false;
-    QList<RTSPPlayer*> players;
 };
 #endif // MAINWINDOW_H
